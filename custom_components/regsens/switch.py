@@ -1,0 +1,41 @@
+from __future__ import annotations
+
+from homeassistant.components.switch import SwitchEntity
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from .const import DOMAIN
+from .entity import RegSensEntity
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
+    data = hass.data[DOMAIN][entry.entry_id]
+    api = data["api"]
+    coordinator = data["coordinator"]
+
+    entities = []
+    for dev in coordinator.data or []:
+        for ent in dev.get("entities", []):
+            if ent.get("type") == "switch":
+                entities.append(RegSensSwitch(api, coordinator, dev, ent))
+    async_add_entities(entities)
+
+
+class RegSensSwitch(RegSensEntity, SwitchEntity):
+    def __init__(self, api, coordinator, device: dict, entity: dict) -> None:
+        super().__init__(coordinator, device, entity)
+        self.api = api
+
+    @property
+    def is_on(self):
+        entity = self.current_entity
+        return bool(entity.get("state")) if entity else None
+
+    async def async_turn_on(self, **kwargs):
+        await self.api.async_set_entity(self.device_id, self.entity_id, True)
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_off(self, **kwargs):
+        await self.api.async_set_entity(self.device_id, self.entity_id, False)
+        await self.coordinator.async_request_refresh()

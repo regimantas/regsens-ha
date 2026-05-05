@@ -1,0 +1,21 @@
+{
+  "title": "RegSens",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to RegSens",
+        "description": "Enter your RegSens API endpoint and API key.",
+        "data": {
+          "api_url": "API URL",
+          "api_key": "API key"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the RegSens API"
+    },
+    "abort": {
+      "already_configured": "This RegSens API is already configured"
+    }
+  }
+}
