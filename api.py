@@ -1,0 +1,11 @@
+{
+  "domain": "regsens",
+  "name": "RegSens",
+  "version": "0.1.0",
+  "documentation": "https://github.com/regimantas/regsens-ha",
+  "issue_tracker": "https://github.com/regimantas/regsens-ha/issues",
+  "codeowners": ["@regimantas"],
+  "config_flow": true,
+  "iot_class": "cloud_polling",
+  "requirements": []
+}
