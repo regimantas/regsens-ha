@@ -6,6 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
+from .discovery import async_setup_regsens_entities
 from .entity import RegSensEntity
 
 
@@ -14,12 +15,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     api = data["api"]
     coordinator = data["coordinator"]
 
-    entities = []
-    for dev in coordinator.data or []:
-        for ent in dev.get("entities", []):
-            if ent.get("type") == "number":
-                entities.append(RegSensNumber(api, coordinator, dev, ent))
-    async_add_entities(entities)
+    async_setup_regsens_entities(
+        entry,
+        async_add_entities,
+        coordinator,
+        "number",
+        lambda dev, ent: RegSensNumber(api, coordinator, dev, ent),
+    )
 
 
 class RegSensNumber(RegSensEntity, NumberEntity):

@@ -2,6 +2,8 @@
 
 HACS-ready custom integration for RegSens devices.
 
+The integration polls the configured RegSens API and dynamically adds newly discovered entities.
+
 ## Install with HACS custom repository
 
 1. In Home Assistant open HACS.
@@ -18,6 +20,8 @@ HACS-ready custom integration for RegSens devices.
 The RegSens server source code is intentionally not included in this repository.
 
 The server can be written in Go, Python, Node.js, Rust, or any other language. The Home Assistant integration only needs an HTTP JSON API that matches the format below.
+
+New devices and entities returned by the API are discovered automatically during the next poll. The default poll interval is 30 seconds.
 
 ## API format expected
 

@@ -6,6 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
+from .discovery import async_setup_regsens_entities
 from .entity import RegSensEntity
 
 
@@ -13,12 +14,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator = data["coordinator"]
 
-    entities = []
-    for dev in coordinator.data or []:
-        for ent in dev.get("entities", []):
-            if ent.get("type") == "binary_sensor":
-                entities.append(RegSensBinarySensor(coordinator, dev, ent))
-    async_add_entities(entities)
+    async_setup_regsens_entities(
+        entry,
+        async_add_entities,
+        coordinator,
+        "binary_sensor",
+        lambda dev, ent: RegSensBinarySensor(coordinator, dev, ent),
+    )
 
 
 class RegSensBinarySensor(RegSensEntity, BinarySensorEntity):
