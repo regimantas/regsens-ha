@@ -2,32 +2,22 @@
 
 HACS-ready custom integration for RegSens devices.
 
-## Test API server
-
-`example_server.py` is a local mock server for testing the integration. It is not a production server.
-
-Run it with:
-
-```bash
-pip install fastapi uvicorn
-uvicorn example_server:app --reload
-```
-
-Then add RegSens in Home Assistant with:
-
-- API URL: `http://127.0.0.1:8000`
-- API key: `test-key`
-
 ## Install with HACS custom repository
 
-1. Upload this repository to GitHub, for example `regsens-ha`.
-2. In Home Assistant open HACS.
-3. Open the three-dot menu and choose **Custom repositories**.
-4. Add your GitHub repository URL.
-5. Category: **Integration**.
-6. Install **RegSens**.
-7. Restart Home Assistant.
-8. Go to **Settings → Devices & services → Add integration → RegSens**.
+1. In Home Assistant open HACS.
+2. Open the three-dot menu and choose **Custom repositories**.
+3. Add `https://github.com/regimantas/regsens-ha`.
+4. Category: **Integration**.
+5. Install **RegSens**.
+6. Restart Home Assistant.
+7. Go to **Settings → Devices & services → Add integration → RegSens**.
+8. Enter your RegSens API URL and API key.
+
+## Server implementation
+
+The RegSens server source code is intentionally not included in this repository.
+
+The server can be written in Go, Python, Node.js, Rust, or any other language. The Home Assistant integration only needs an HTTP JSON API that matches the format below.
 
 ## API format expected
 
