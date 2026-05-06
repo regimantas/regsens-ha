@@ -21,27 +21,35 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
         super().__init__(coordinator)
         self.device = device
         self.entity = entity
-        self.device_id = str(device.get("id"))
-        self.entity_id = str(entity.get("id"))
+        self._regsens_device_id = str(device.get("id"))
+        self._regsens_entity_id = str(entity.get("id"))
         self._attr_has_entity_name = True
-        self._attr_name = str(entity.get("name") or self.entity_id)
-        self._attr_unique_id = f"regsens_{self.device_id}_{self.entity_id}"
+        self._attr_name = str(entity.get("name") or self._regsens_entity_id)
+        self._attr_unique_id = f"regsens_{self._regsens_device_id}_{self._regsens_entity_id}"
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, self.device_id)},
-            name=str(device.get("name") or self.device_id),
+            identifiers={(DOMAIN, self._regsens_device_id)},
+            name=str(device.get("name") or self._regsens_device_id),
             manufacturer=str(device.get("manufacturer") or "RegSens"),
             model=str(device.get("model") or "RegSens Device"),
         )
 
     @property
+    def regsens_device_id(self) -> str:
+        return self._regsens_device_id
+
+    @property
+    def regsens_entity_id(self) -> str:
+        return self._regsens_entity_id
+
+    @property
     def current_entity(self) -> dict[str, Any] | None:
         for device in self.coordinator.data or []:
-            if str(device.get("id")) != self.device_id:
+            if str(device.get("id")) != self._regsens_device_id:
                 continue
 
             self.device = device
             for entity in device.get("entities", []):
-                if str(entity.get("id")) == self.entity_id:
+                if str(entity.get("id")) == self._regsens_entity_id:
                     self.entity = entity
                     return entity
 
