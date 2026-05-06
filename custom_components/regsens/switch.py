@@ -35,9 +35,17 @@ class RegSensSwitch(RegSensEntity, SwitchEntity):
         return bool(entity.get("state")) if entity else None
 
     async def async_turn_on(self, **kwargs):
-        await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, True)
-        await self.coordinator.async_request_refresh()
+        response = await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, True)
+        self.coordinator.async_apply_entity_state(
+            self.regsens_device_id,
+            self.regsens_entity_id,
+            response.get("value", True),
+        )
 
     async def async_turn_off(self, **kwargs):
-        await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, False)
-        await self.coordinator.async_request_refresh()
+        response = await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, False)
+        self.coordinator.async_apply_entity_state(
+            self.regsens_device_id,
+            self.regsens_entity_id,
+            response.get("value", False),
+        )

@@ -39,5 +39,9 @@ class RegSensNumber(RegSensEntity, NumberEntity):
         return entity.get("state") if entity else None
 
     async def async_set_native_value(self, value: float) -> None:
-        await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, value)
-        await self.coordinator.async_request_refresh()
+        response = await self.api.async_set_entity(self.regsens_device_id, self.regsens_entity_id, value)
+        self.coordinator.async_apply_entity_state(
+            self.regsens_device_id,
+            self.regsens_entity_id,
+            response.get("value", value),
+        )

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -37,3 +38,24 @@ class RegSensDataUpdateCoordinator(DataUpdateCoordinator[list[dict]]):
         except RegSensApiError as err:
             raise UpdateFailed(str(err)) from err
 
+    def async_apply_entity_state(self, device_id: str, entity_id: str, state: Any) -> None:
+        """Apply a just-sent command locally so HA UI does not bounce."""
+        changed = False
+        devices: list[dict] = []
+
+        for device in self.data or []:
+            new_device = dict(device)
+            entities: list[dict] = []
+
+            for entity in device.get("entities", []):
+                new_entity = dict(entity)
+                if str(device.get("id")) == device_id and str(entity.get("id")) == entity_id:
+                    new_entity["state"] = state
+                    changed = True
+                entities.append(new_entity)
+
+            new_device["entities"] = entities
+            devices.append(new_device)
+
+        if changed:
+            self.async_set_updated_data(devices)
