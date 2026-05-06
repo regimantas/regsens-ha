@@ -31,6 +31,7 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
             name=str(device.get("name") or self._regsens_device_id),
             manufacturer=str(device.get("manufacturer") or "RegSens"),
             model=str(device.get("model") or "RegSens Device"),
+            configuration_url=coordinator.api.api_url,
         )
 
     @property

@@ -10,7 +10,7 @@ RegSens is a HACS-ready custom integration for Home Assistant.
 
 The integration connects to the official RegSens API and automatically adds newly discovered devices and entities during the regular poll cycle.
 
-### Install With HACS
+### Install with HACS
 
 If HACS is not installed yet, install and configure HACS first: <https://www.hacs.xyz/docs/use/>.
 
@@ -24,13 +24,17 @@ If HACS is not installed yet, install and configure HACS first: <https://www.hac
 8. Go to **Settings > Devices & services > Add integration > RegSens**.
 9. Enter your RegSens API key. The server address is built into the integration.
 
+### Add Devices
+
+Add and manage RegSens devices at <https://api.regsens.com>.
+
 ## Lietuviškai
 
 RegSens yra HACS paruošta Home Assistant integracija.
 
 Integracija jungiasi prie oficialaus RegSens API ir reguliariai automatiškai prideda naujai aptiktus įrenginius bei jų objektus.
 
-### Diegimas Per HACS
+### Diegimas per HACS
 
 Jeigu HACS dar neįdiegtas, pirmiausia įdiekite ir sukonfigūruokite HACS: <https://www.hacs.xyz/docs/use/>.
 
@@ -43,3 +47,7 @@ Jeigu HACS dar neįdiegtas, pirmiausia įdiekite ir sukonfigūruokite HACS: <htt
 7. Perkraukite Home Assistant.
 8. Eikite į **Settings > Devices & services > Add integration > RegSens**.
 9. Įveskite RegSens API raktą. Serverio adreso įvesti nereikia, jis jau įrašytas integracijoje.
+
+### Įrenginių pridėjimas
+
+RegSens įrenginius pridėkite ir valdykite adresu <https://api.regsens.com>.
