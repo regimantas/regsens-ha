@@ -4,9 +4,8 @@
     "step": {
       "user": {
         "title": "Connect to RegSens",
-        "description": "Enter your RegSens API endpoint and API key.",
+        "description": "Enter your RegSens API key.",
         "data": {
-          "api_url": "API URL",
           "api_key": "API key"
         }
       }

@@ -6,6 +6,8 @@ from homeassistant.const import Platform
 
 DOMAIN = "regsens"
 
+DEFAULT_API_URL = "https://api.regsens.com"
+
 CONF_API_URL = "api_url"
 CONF_API_KEY = "api_key"
 

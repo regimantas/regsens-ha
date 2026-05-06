@@ -4,14 +4,15 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import DOMAIN, CONF_API_URL, CONF_API_KEY, PLATFORMS
+from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_API_URL, DOMAIN, PLATFORMS
 from .api import RegSensApi
 from .coordinator import RegSensDataUpdateCoordinator
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     session = async_get_clientsession(hass)
-    api = RegSensApi(entry.data[CONF_API_URL], entry.data[CONF_API_KEY], session)
+    api_url = entry.data.get(CONF_API_URL, DEFAULT_API_URL)
+    api = RegSensApi(api_url, entry.data[CONF_API_KEY], session)
     coordinator = RegSensDataUpdateCoordinator(hass, entry, api)
 
     await coordinator.async_config_entry_first_refresh()
