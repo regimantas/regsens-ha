@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
@@ -22,8 +23,15 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
         self.entity = entity
         self.device_id = str(device.get("id"))
         self.entity_id = str(entity.get("id"))
-        self._attr_name = f"{device.get('name')} {entity.get('name')}"
+        self._attr_has_entity_name = True
+        self._attr_name = str(entity.get("name") or self.entity_id)
         self._attr_unique_id = f"regsens_{self.device_id}_{self.entity_id}"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self.device_id)},
+            name=str(device.get("name") or self.device_id),
+            manufacturer=str(device.get("manufacturer") or "RegSens"),
+            model=str(device.get("model") or "RegSens Device"),
+        )
 
     @property
     def current_entity(self) -> dict[str, Any] | None:
@@ -42,13 +50,3 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
     @property
     def available(self) -> bool:
         return super().available and self.current_entity is not None
-
-    @property
-    def device_info(self):
-        return {
-            "identifiers": {(DOMAIN, self.device_id)},
-            "name": self.device.get("name"),
-            "manufacturer": self.device.get("manufacturer", "RegSens"),
-            "model": self.device.get("model", "RegSens Device"),
-        }
-

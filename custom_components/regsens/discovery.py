@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -9,6 +10,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .coordinator import RegSensDataUpdateCoordinator
 from .entity import RegSensEntity
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def async_setup_regsens_entities(
@@ -25,6 +28,7 @@ def async_setup_regsens_entities(
     @callback
     def _discover_entities() -> None:
         new_entities: list[RegSensEntity] = []
+        matching_entities = 0
 
         for device in coordinator.data or []:
             device_id = device.get("id")
@@ -35,6 +39,7 @@ def async_setup_regsens_entities(
                 if entity.get("type") != entity_type:
                     continue
 
+                matching_entities += 1
                 entity_id = entity.get("id")
                 if entity_id is None:
                     continue
@@ -46,6 +51,13 @@ def async_setup_regsens_entities(
                 known_entities.add(key)
                 new_entities.append(create_entity(device, entity))
 
+        log = _LOGGER.warning if matching_entities == 0 else _LOGGER.info
+        log(
+            "RegSens %s discovery saw %d matching entities and will add %d new entities",
+            entity_type,
+            matching_entities,
+            len(new_entities),
+        )
         if new_entities:
             async_add_entities(new_entities)
 

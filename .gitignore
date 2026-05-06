@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+dist/
 
 # Keep private/backend server code out of this Home Assistant integration repo.
 example_server.py

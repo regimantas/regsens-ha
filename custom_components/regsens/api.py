@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import aiohttp
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class RegSensApiError(Exception):
@@ -34,7 +37,13 @@ class RegSensApi:
         except (TimeoutError, aiohttp.ClientError) as err:
             raise RegSensApiError(f"Cannot connect to RegSens API: {err}") from err
 
-        return data.get("devices", [])
+        devices = data.get("devices", [])
+        entity_count = sum(len(device.get("entities", [])) for device in devices)
+        if not devices:
+            _LOGGER.warning("RegSens API returned no devices for this API key")
+        else:
+            _LOGGER.info("RegSens API returned %d devices and %d entities", len(devices), entity_count)
+        return devices
 
     async def async_set_entity(self, device_id: str, entity_id: str, value: Any):
         url = f"{self.api_url}/api/v1/devices/{device_id}/entities/{entity_id}/set"
