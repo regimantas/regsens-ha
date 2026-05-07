@@ -1,0 +1,20 @@
+{
+  "title": "RegSens",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Prijungti RegSens",
+        "description": "Įveskite RegSens API raktą. Raktą galite sugeneruoti adresu https://api.regsens.com. Serverio URL parenkamas automatiškai.",
+        "data": {
+          "api_key": "API raktas"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nepavyko prisijungti prie RegSens API"
+    },
+    "abort": {
+      "already_configured": "Šis RegSens API jau sukonfigūruotas"
+    }
+  }
+}

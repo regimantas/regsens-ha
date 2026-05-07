@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Connect to RegSens",
-        "description": "Enter your RegSens API key. Add or manage devices at https://api.regsens.com.",
+        "description": "Enter your RegSens API key. Get the key at https://api.regsens.com. The server URL is selected automatically.",
         "data": {
           "api_key": "API key"
         }
