@@ -58,4 +58,11 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
 
     @property
     def available(self) -> bool:
-        return super().available and self.current_entity is not None
+        if not super().available or self.current_entity is None:
+            return False
+        if self._regsens_entity_id == "online":
+            return True
+        for entity in self.device.get("entities", []):
+            if str(entity.get("id")) == "online":
+                return bool(entity.get("state"))
+        return True
