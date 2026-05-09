@@ -8,7 +8,7 @@
 
 RegSens is a HACS-ready custom integration for Home Assistant.
 
-The integration connects to the official RegSens API and automatically adds newly discovered devices and entities during the regular poll cycle.
+The integration connects to the official RegSens API, receives live device updates over WebSocket, and keeps a periodic poll as a fallback resync.
 
 ### Install with HACS
 
@@ -32,7 +32,7 @@ Add and manage RegSens devices at <https://api.regsens.com>.
 
 RegSens yra HACS paruošta Home Assistant integracija.
 
-Integracija jungiasi prie oficialaus RegSens API ir reguliariai automatiškai prideda naujai aptiktus įrenginius bei jų objektus.
+Integracija jungiasi prie oficialaus RegSens API, gyvai gauna įrenginių pokyčius per WebSocket ir palieka periodinį polling kaip atsarginį persinchronizavimą.
 
 ### Diegimas per HACS
 

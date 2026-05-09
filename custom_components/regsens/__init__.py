@@ -16,6 +16,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = RegSensDataUpdateCoordinator(hass, entry, api)
 
     await coordinator.async_config_entry_first_refresh()
+    coordinator.async_start_websocket()
+    entry.async_on_unload(coordinator.async_stop_websocket)
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
         "api": api,
@@ -29,5 +31,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
-        hass.data[DOMAIN].pop(entry.entry_id, None)
+        data = hass.data[DOMAIN].pop(entry.entry_id, None)
+        if data:
+            data["coordinator"].async_stop_websocket()
     return unload_ok

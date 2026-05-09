@@ -18,4 +18,5 @@ PLATFORMS = [
     Platform.SWITCH,
 ]
 
-SCAN_INTERVAL = timedelta(seconds=5)
+SCAN_INTERVAL = timedelta(seconds=60)
+WEBSOCKET_RECONNECT_INTERVAL = 10
