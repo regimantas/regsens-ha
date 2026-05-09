@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
+from urllib.parse import urlparse, urlunparse
 
 import aiohttp
 
@@ -26,6 +27,18 @@ class RegSensApi:
     @property
     def headers(self) -> dict[str, str]:
         return {"X-API-Key": self.api_key, "Content-Type": "application/json"}
+
+    @property
+    def auth_headers(self) -> dict[str, str]:
+        return {"X-API-Key": self.api_key}
+
+    @property
+    def websocket_url(self) -> str:
+        parsed = urlparse(self.api_url)
+        scheme = "wss" if parsed.scheme == "https" else "ws"
+        base_path = parsed.path.rstrip("/")
+        path = f"{base_path}/api/v1/events" if base_path else "/api/v1/events"
+        return urlunparse(parsed._replace(scheme=scheme, path=path, params="", query="", fragment=""))
 
     async def async_get_devices(self) -> list[dict]:
         url = f"{self.api_url}/api/v1/devices"
