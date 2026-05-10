@@ -9,7 +9,7 @@
 RegSens is a HACS-ready custom integration for Home Assistant.
 
 The integration connects to the official RegSens API, receives live device updates over WebSocket, and keeps a periodic poll as a fallback resync.
-It supports RegSens sensors, binary sensors, switches, numbers, and RGB lights.
+It supports RegSens sensors, binary sensors, switches, numbers, RGB lights, sensor device classes, and battery-powered PIR motion sensors.
 
 ### Install with HACS
 
@@ -34,7 +34,7 @@ Add and manage RegSens devices at <https://api.regsens.com>.
 RegSens yra HACS paruošta Home Assistant integracija.
 
 Integracija jungiasi prie oficialaus RegSens API, gyvai gauna įrenginių pokyčius per WebSocket ir palieka periodinį polling kaip atsarginį persinchronizavimą.
-Ji palaiko RegSens jutiklius, dvejetainius jutiklius, jungiklius, skaičių valdiklius ir RGB šviesas.
+Ji palaiko RegSens jutiklius, dvejetainius jutiklius, jungiklius, skaičių valdiklius, RGB šviesas, jutiklių klases ir baterinius PIR judesio jutiklius.
 
 ### Diegimas per HACS
 

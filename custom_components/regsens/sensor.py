@@ -30,7 +30,17 @@ class RegSensSensor(RegSensEntity, SensorEntity):
         unit = entity.get("unit")
         self._attr_native_unit_of_measurement = self._normalize_unit(unit)
 
-        if self._is_temperature_sensor(entity):
+        device_class = self._sensor_device_class(entity)
+        if device_class is not None:
+            self._attr_device_class = device_class
+
+        state_class = self._sensor_state_class(entity)
+        if state_class is not None:
+            self._attr_state_class = state_class
+
+        if device_class == SensorDeviceClass.TEMPERATURE:
+            self._attr_suggested_display_precision = 1
+        elif self._is_temperature_sensor(entity):
             self._attr_device_class = SensorDeviceClass.TEMPERATURE
             self._attr_state_class = SensorStateClass.MEASUREMENT
             self._attr_suggested_display_precision = 1
@@ -55,3 +65,23 @@ class RegSensSensor(RegSensEntity, SensorEntity):
             or "temperature" in name
             or unit in {"c", "°c", "celsius"}
         )
+
+    @staticmethod
+    def _sensor_device_class(entity: dict) -> SensorDeviceClass | None:
+        value = str(entity.get("device_class") or "").strip()
+        if not value:
+            return None
+        try:
+            return SensorDeviceClass(value)
+        except ValueError:
+            return None
+
+    @staticmethod
+    def _sensor_state_class(entity: dict) -> SensorStateClass | None:
+        value = str(entity.get("state_class") or "").strip()
+        if not value:
+            return None
+        try:
+            return SensorStateClass(value)
+        except ValueError:
+            return None

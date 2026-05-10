@@ -26,10 +26,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 class RegSensBinarySensor(RegSensEntity, BinarySensorEntity):
     def __init__(self, coordinator, device: dict, entity: dict) -> None:
         super().__init__(coordinator, device, entity)
-        if self.regsens_entity_id == "online":
+        self._attr_device_class = self._binary_sensor_device_class(entity)
+        if self._attr_device_class is None and self.regsens_entity_id == "online":
             self._attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
 
     @property
     def is_on(self):
         entity = self.current_entity
         return bool(entity.get("state")) if entity else None
+
+    @staticmethod
+    def _binary_sensor_device_class(entity: dict) -> BinarySensorDeviceClass | None:
+        value = str(entity.get("device_class") or "").strip()
+        if not value:
+            return None
+        try:
+            return BinarySensorDeviceClass(value)
+        except ValueError:
+            return None
