@@ -64,5 +64,14 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
             return True
         for entity in self.device.get("entities", []):
             if str(entity.get("id")) == "online":
-                return bool(entity.get("state"))
+                if bool(entity.get("state")):
+                    return True
+                return self._is_available_while_device_sleeps()
         return True
+
+    def _is_available_while_device_sleeps(self) -> bool:
+        entity = self.current_entity or self.entity
+        entity_type = str(entity.get("type") or "").strip()
+        if entity_type in {"sensor", "binary_sensor"}:
+            return True
+        return not bool(entity.get("commandable"))
