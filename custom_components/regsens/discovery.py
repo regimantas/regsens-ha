@@ -51,15 +51,19 @@ def async_setup_regsens_entities(
                 known_entities.add(key)
                 new_entities.append(create_entity(device, entity))
 
-        log = _LOGGER.warning if matching_entities == 0 else _LOGGER.info
-        log(
-            "RegSens %s discovery saw %d matching entities and will add %d new entities",
-            entity_type,
-            matching_entities,
-            len(new_entities),
-        )
         if new_entities:
+            _LOGGER.info(
+                "RegSens %s discovery added %d new entities",
+                entity_type,
+                len(new_entities),
+            )
             async_add_entities(new_entities)
+        else:
+            _LOGGER.debug(
+                "RegSens %s discovery saw %d matching entities and no new entities",
+                entity_type,
+                matching_entities,
+            )
 
     _discover_entities()
     entry.async_on_unload(coordinator.async_add_listener(_discover_entities))
