@@ -72,3 +72,29 @@ class RegSensApi:
                 return await resp.json()
         except (TimeoutError, aiohttp.ClientError) as err:
             raise RegSensApiError(f"Cannot connect to RegSens API: {err}") from err
+
+    async def async_delete_device(self, device_id: str) -> None:
+        """Delete a device from the RegSens API."""
+        attempts = [
+            ("delete", f"{self.api_url}/api/v1/devices/{device_id}"),
+            ("post", f"{self.api_url}/api/v1/devices/{device_id}/delete"),
+            ("post", f"{self.api_url}/api/v1/devices/{device_id}/remove"),
+        ]
+        errors: list[str] = []
+
+        for method_name, url in attempts:
+            method = getattr(self.session, method_name)
+            try:
+                async with method(url, headers=self.headers, timeout=15) as resp:
+                    if resp.status in {200, 202, 204}:
+                        return
+
+                    if resp.status in {404, 405}:
+                        errors.append(f"{method_name.upper()} {url} returned HTTP {resp.status}")
+                        continue
+
+                    raise RegSensApiError(f"API returned HTTP {resp.status}")
+            except (TimeoutError, aiohttp.ClientError) as err:
+                raise RegSensApiError(f"Cannot connect to RegSens API: {err}") from err
+
+        raise RegSensApiError("; ".join(errors) or "Device removal is not supported by the RegSens API")

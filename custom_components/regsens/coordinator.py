@@ -107,3 +107,14 @@ class RegSensDataUpdateCoordinator(DataUpdateCoordinator[list[dict]]):
 
         if changed:
             self.async_set_updated_data(devices)
+
+    def has_device(self, device_id: str) -> bool:
+        """Return whether the coordinator currently knows the device."""
+        return any(str(device.get("id")) == device_id for device in self.data or [])
+
+    def async_remove_device(self, device_id: str) -> None:
+        """Remove a device from the cached coordinator data."""
+        devices = [
+            device for device in self.data or [] if str(device.get("id")) != device_id
+        ]
+        self.async_set_updated_data(devices)
