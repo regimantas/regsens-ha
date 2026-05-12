@@ -26,13 +26,18 @@ class RegSensEntity(CoordinatorEntity[RegSensDataUpdateCoordinator]):
         self._attr_has_entity_name = True
         self._attr_name = str(entity.get("name") or self._regsens_entity_id)
         self._attr_unique_id = f"regsens_{self._regsens_device_id}_{self._regsens_entity_id}"
-        self._attr_device_info = DeviceInfo(
+        device_info = DeviceInfo(
             identifiers={(DOMAIN, self._regsens_device_id)},
             name=str(device.get("name") or self._regsens_device_id),
             manufacturer=str(device.get("manufacturer") or "RegSens"),
             model=str(device.get("model") or "RegSens Device"),
             configuration_url=coordinator.api.api_url,
         )
+        if firmware := str(device.get("firmware") or ""):
+            device_info["sw_version"] = firmware
+        if via_device_id := str(device.get("via_device_id") or ""):
+            device_info["via_device"] = (DOMAIN, via_device_id)
+        self._attr_device_info = device_info
 
     @property
     def regsens_device_id(self) -> str:
