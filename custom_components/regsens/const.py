@@ -17,6 +17,7 @@ PLATFORMS = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
     Platform.SWITCH,
+    Platform.EVENT,
 ]
 
 SCAN_INTERVAL = timedelta(seconds=60)
