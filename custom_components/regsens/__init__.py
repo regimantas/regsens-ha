@@ -4,25 +4,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntry
-from homeassistant.helpers import entity_registry as er
 
 from .const import CONF_API_KEY, CONF_API_URL, DEFAULT_API_URL, DOMAIN, PLATFORMS
 from .api import RegSensApi, RegSensApiError
 from .coordinator import RegSensDataUpdateCoordinator
-
-
-async def _async_remove_device_entities(
-    hass: HomeAssistant,
-    device_entry: DeviceEntry,
-) -> None:
-    """Purge entity registry entries so the same device ID can be rediscovered cleanly."""
-    entity_registry = er.async_get(hass)
-    for entity_entry in er.async_entries_for_device(
-        entity_registry,
-        device_entry.id,
-        include_disabled_entities=True,
-    ):
-        entity_registry.async_remove(entity_entry.entity_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -76,7 +61,6 @@ async def async_remove_config_entry_device(
 
     if not coordinator.has_device(device_id):
         coordinator.async_remove_device(device_id)
-        await _async_remove_device_entities(hass, device_entry)
         return True
 
     try:
@@ -87,6 +71,5 @@ async def async_remove_config_entry_device(
             return False
 
     coordinator.async_remove_device(device_id)
-    await _async_remove_device_entities(hass, device_entry)
 
     return True
