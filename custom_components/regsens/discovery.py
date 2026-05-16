@@ -29,6 +29,7 @@ def async_setup_regsens_entities(
     def _discover_entities() -> None:
         new_entities: list[RegSensEntity] = []
         matching_entities = 0
+        current_entities: set[tuple[str, str]] = set()
 
         for device in coordinator.data or []:
             device_id = device.get("id")
@@ -45,11 +46,14 @@ def async_setup_regsens_entities(
                     continue
 
                 key = (str(device_id), str(entity_id))
+                current_entities.add(key)
                 if key in known_entities:
                     continue
 
                 known_entities.add(key)
                 new_entities.append(create_entity(device, entity))
+
+        known_entities.intersection_update(current_entities)
 
         if new_entities:
             _LOGGER.info(
